@@ -388,25 +388,44 @@ void _tm1637DioLow(void)
 
 
 
+unsigned int clock(void)
+{
+	unsigned char h = TIM1_CNTRH; //origineel PCNTRH
+	unsigned char l = TIM1_CNTRL;
+	return((unsigned int)(h) << 8 | l);
+}
 
 
 
 
 
 int main () {
+        int readValue;             //value read from the sensor
+        int maxValue = 0;          // store max value here
+        int minValue = 2;          // store max value here
+        int tijd;
 	unsigned int val=0;
 	unsigned int displaymode=1;
-	InitializeSystemClock();
 
+	InitializeSystemClock();
 	//display on PD2 PD3
 	PD_DDR = (1 << 3) | (1 << 2); // output mode
 	PD_CR1 = (1 << 3) | (1 << 2); // push-pull
 	PD_CR2 = (1 << 3) | (1 << 2); // up to 10MHz speed
 
+
+        // Configure timer
+	// 1000 ticks per second
+	TIM1_PSCRH = 0x3e;
+	TIM1_PSCRL = 0x80;
+
+
+
 	//reading display-mode switch
-	PA_DDR &= ~(1<<3); //port PA3 input
-	PA_CR1 |= 1<<3; //pull up enabled
-	//reading analog value
+//	PA_DDR &= ~(1<<3); //port PA3 input
+//	PA_CR1 |= 1<<3; //pull up enabled
+
+ 	//reading analog value
 	//using ADC in single conversion mode
 	ADC_CSR |= ((0x0F)&2); // select channel = 2 = PC4
 	ADC_CR2 |= (1<<3); // Right Aligned Data
@@ -419,11 +438,30 @@ int main () {
 		ADC_CR1 |= (1<<0); // ADC Start Conversion
 		while(((ADC_CSR)&(1<<7))== 0); // Wait till EOC
 		val |= (unsigned int)ADC_DRL;
-             UARTPrintF("value = \n\r");
-             print_UCHAR_hex(val);
+                UARTPrintF("value = \n\r");
+                print_UCHAR_hex(val);
 		val |= (unsigned int)ADC_DRH<<8;
 		ADC_CR1 &= ~(1<<0); // ADC Stop Conversion
-		val &= 0x03ff;
+		readValue = val & 0x03ff;
+if (readValue > maxValue) 
+       {
+           /*record the maximum sensor value*/
+           maxValue = readValue;
+       }
+if (maxValue > minValue)
+{
+TIM1_CR1 = 0x01; // enable timer
+}
+if (readValue < minValue)
+{
+TIM1_CR1 = 0x00; // disable timer
+tijd=clock();
+                print_UCHAR_hex(tijd);
+}
+
+
+
+
 		tm1637DisplayDecimal(val, 1); // eg 37:12
 
 

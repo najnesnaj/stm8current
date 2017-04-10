@@ -1,7 +1,7 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 3.4.0 #8981 (Jul 11 2014) (Linux)
-; This file was generated Mon Apr 10 14:57:47 2017
+; This file was generated Mon Apr 10 16:17:21 2017
 ;--------------------------------------------------------
 	.module sensors
 	.optsdcc -mstm8
@@ -11,6 +11,7 @@
 ;--------------------------------------------------------
 	.globl _segmentMap
 	.globl _main
+	.globl _clock
 	.globl _tm1637DisplayDecimal
 	.globl _tm1637Init
 	.globl _InitializeUART
@@ -1014,91 +1015,129 @@ __tm1637DioLow:
 	and	a, #0xf7
 	ld	(x), a
 	ret
-;	sensors.c: 396: int main () {
+;	sensors.c: 391: unsigned int clock(void)
+;	-----------------------------------------
+;	 function clock
+;	-----------------------------------------
+_clock:
+	sub	sp, #3
+;	sensors.c: 393: unsigned char h = TIM1_CNTRH; //origineel PCNTRH
+	ldw	x, #0x525e
+	ld	a, (x)
+;	sensors.c: 394: unsigned char l = TIM1_CNTRL;
+	ldw	x, #0x525f
+	push	a
+	ld	a, (x)
+	ld	(0x02, sp), a
+	pop	a
+;	sensors.c: 395: return((unsigned int)(h) << 8 | l);
+	clrw	x
+	ld	xl, a
+	sllw	x
+	sllw	x
+	sllw	x
+	sllw	x
+	sllw	x
+	sllw	x
+	sllw	x
+	sllw	x
+	ld	a, (0x01, sp)
+	ld	(0x03, sp), a
+	clr	(0x02, sp)
+	ld	a, xl
+	or	a, (0x03, sp)
+	ld	xl, a
+	ld	a, xh
+	or	a, (0x02, sp)
+	ld	xh, a
+	addw	sp, #3
+	ret
+;	sensors.c: 402: int main () {
 ;	-----------------------------------------
 ;	 function main
 ;	-----------------------------------------
 _main:
-	sub	sp, #6
-;	sensors.c: 397: unsigned int val=0;
+	sub	sp, #10
+;	sensors.c: 404: int maxValue = 0;          // store max value here
+	clrw	x
+	ldw	(0x01, sp), x
+;	sensors.c: 407: unsigned int val=0;
 	clrw	x
 	ldw	(0x05, sp), x
-;	sensors.c: 399: InitializeSystemClock();
+;	sensors.c: 410: InitializeSystemClock();
 	call	_InitializeSystemClock
-;	sensors.c: 402: PD_DDR = (1 << 3) | (1 << 2); // output mode
+;	sensors.c: 412: PD_DDR = (1 << 3) | (1 << 2); // output mode
 	ldw	x, #0x5011
 	ld	a, #0x0c
 	ld	(x), a
-;	sensors.c: 403: PD_CR1 = (1 << 3) | (1 << 2); // push-pull
+;	sensors.c: 413: PD_CR1 = (1 << 3) | (1 << 2); // push-pull
 	ldw	x, #0x5012
 	ld	a, #0x0c
 	ld	(x), a
-;	sensors.c: 404: PD_CR2 = (1 << 3) | (1 << 2); // up to 10MHz speed
+;	sensors.c: 414: PD_CR2 = (1 << 3) | (1 << 2); // up to 10MHz speed
 	ldw	x, #0x5013
 	ld	a, #0x0c
 	ld	(x), a
-;	sensors.c: 407: PA_DDR &= ~(1<<3); //port PA3 input
-	ldw	x, #0x5002
-	ld	a, (x)
-	and	a, #0xf7
+;	sensors.c: 419: TIM1_PSCRH = 0x3e;
+	ldw	x, #0x5260
+	ld	a, #0x3e
 	ld	(x), a
-;	sensors.c: 408: PA_CR1 |= 1<<3; //pull up enabled
-	ldw	x, #0x5003
-	ld	a, (x)
-	or	a, #0x08
+;	sensors.c: 420: TIM1_PSCRL = 0x80;
+	ldw	x, #0x5261
+	ld	a, #0x80
 	ld	(x), a
-;	sensors.c: 411: ADC_CSR |= ((0x0F)&2); // select channel = 2 = PC4
+;	sensors.c: 430: ADC_CSR |= ((0x0F)&2); // select channel = 2 = PC4
 	ldw	x, #0x5400
 	ld	a, (x)
 	or	a, #0x02
 	ld	(x), a
-;	sensors.c: 412: ADC_CR2 |= (1<<3); // Right Aligned Data
+;	sensors.c: 431: ADC_CR2 |= (1<<3); // Right Aligned Data
 	ldw	x, #0x5402
 	ld	a, (x)
 	or	a, #0x08
 	ld	(x), a
-;	sensors.c: 413: ADC_CR1 |= (1<<0); // ADC ON
+;	sensors.c: 432: ADC_CR1 |= (1<<0); // ADC ON
 	ldw	x, #0x5401
 	ld	a, (x)
 	or	a, #0x01
 	ld	(x), a
-;	sensors.c: 414: tm1637Init();
+;	sensors.c: 433: tm1637Init();
 	call	_tm1637Init
-;	sensors.c: 416: InitializeUART();
+;	sensors.c: 435: InitializeUART();
 	call	_InitializeUART
-;	sensors.c: 417: while (1) {
-00105$:
-;	sensors.c: 419: ADC_CR1 |= (1<<0); // ADC Start Conversion
+;	sensors.c: 436: while (1) {
+00111$:
+;	sensors.c: 438: ADC_CR1 |= (1<<0); // ADC Start Conversion
 	bset	0x5401, #0
-;	sensors.c: 420: while(((ADC_CSR)&(1<<7))== 0); // Wait till EOC
+;	sensors.c: 439: while(((ADC_CSR)&(1<<7))== 0); // Wait till EOC
 00101$:
 	ldw	x, #0x5400
 	ld	a, (x)
 	sll	a
 	jrnc	00101$
-;	sensors.c: 421: val |= (unsigned int)ADC_DRL;
+;	sensors.c: 440: val |= (unsigned int)ADC_DRL;
 	ldw	x, #0x5405
 	ld	a, (x)
 	clrw	x
 	ld	xl, a
 	or	a, (0x06, sp)
-	ld	(0x04, sp), a
+	ld	(0x0a, sp), a
 	ld	a, xh
 	or	a, (0x05, sp)
-	ld	(0x01, sp), a
-	ld	a, (0x04, sp)
-	ld	(0x02, sp), a
-;	sensors.c: 422: UARTPrintF("value = \n\r");
+	ld	(0x03, sp), a
+	ld	a, (0x0a, sp)
+	ld	(0x04, sp), a
+;	sensors.c: 441: UARTPrintF("value = \n\r");
 	ldw	x, #___str_0+0
 	pushw	x
 	call	_UARTPrintF
 	addw	sp, #2
-;	sensors.c: 423: print_UCHAR_hex(val);
-	ld	a, (0x02, sp)
+;	sensors.c: 442: print_UCHAR_hex(val);
+	ld	a, (0x04, sp)
 	push	a
 	call	_print_UCHAR_hex
 	pop	a
-;	sensors.c: 424: val |= (unsigned int)ADC_DRH<<8;
+;	sensors.c: 443: val |= (unsigned int)ADC_DRH<<8;
 	ldw	x, #0x5404
 	ld	a, (x)
 	clrw	x
@@ -1112,22 +1151,56 @@ _main:
 	sllw	x
 	sllw	x
 	ld	a, xl
-	or	a, (0x02, sp)
-	ld	yl, a
+	or	a, (0x04, sp)
+	ld	(0x08, sp), a
 	ld	a, xh
-	or	a, (0x01, sp)
-	ld	yh, a
-;	sensors.c: 425: ADC_CR1 &= ~(1<<0); // ADC Stop Conversion
+	or	a, (0x03, sp)
+	ld	(0x05, sp), a
+	ld	a, (0x08, sp)
+	ld	(0x06, sp), a
+;	sensors.c: 444: ADC_CR1 &= ~(1<<0); // ADC Stop Conversion
 	ldw	x, #0x5401
 	ld	a, (x)
 	and	a, #0xfe
 	ld	(x), a
-;	sensors.c: 426: val &= 0x03ff;
-	ld	a, yh
+;	sensors.c: 445: readValue = val & 0x03ff;
+	ld	a, (0x06, sp)
+	ld	yl, a
+	ld	a, (0x05, sp)
 	and	a, #0x03
 	ld	yh, a
-	ldw	(0x05, sp), y
-;	sensors.c: 427: tm1637DisplayDecimal(val, 1); // eg 37:12
+;	sensors.c: 446: if (readValue > maxValue) 
+	exgw	x, y
+	cpw	x, (0x01, sp)
+	exgw	x, y
+	jrsle	00105$
+;	sensors.c: 449: maxValue = readValue;
+	ldw	(0x01, sp), y
+00105$:
+;	sensors.c: 451: if (maxValue > minValue)
+	ldw	x, (0x01, sp)
+	cpw	x, #0x0002
+	jrsle	00107$
+;	sensors.c: 453: TIM1_CR1 = 0x01; // enable timer
+	ldw	x, #0x5250
+	ld	a, #0x01
+	ld	(x), a
+00107$:
+;	sensors.c: 455: if (readValue < minValue)
+	cpw	y, #0x0002
+	jrsge	00109$
+;	sensors.c: 457: TIM1_CR1 = 0x00; // disable timer
+	ldw	x, #0x5250
+	clr	(x)
+;	sensors.c: 458: tijd=clock();
+	call	_clock
+;	sensors.c: 459: print_UCHAR_hex(tijd);
+	ld	a, xl
+	push	a
+	call	_print_UCHAR_hex
+	pop	a
+00109$:
+;	sensors.c: 465: tm1637DisplayDecimal(val, 1); // eg 37:12
 	ldw	y, (0x05, sp)
 	clrw	x
 	push	#0x01
@@ -1136,8 +1209,8 @@ _main:
 	pushw	x
 	call	_tm1637DisplayDecimal
 	addw	sp, #6
-	jra	00105$
-	addw	sp, #6
+	jp	00111$
+	addw	sp, #10
 	ret
 	.area CODE
 _segmentMap:

@@ -44,12 +44,12 @@ CABS                                00000000    00000000 =           0. bytes (A
      00000083  l_HOME                          
      00000100  l_IRAM                          
      00000100  l_SSEG                          
-     00000556  l_CODE                          
+     000005AF  l_CODE                          
      00008000  s_HOME                          
      00008083  s_GSINIT                        
      0000809D  s_GSFINAL                       
      000080A0  s_CODE                          
-     000085F6  s_INITIALIZER                   
+     0000864F  s_INITIALIZER                   
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 2.
 Hexadecimal  [32-Bits]
@@ -112,7 +112,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CODE                                000080A0    00000556 =        1366. bytes (REL,CON)
+CODE                                000080A0    000005AF =        1455. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -142,10 +142,10 @@ CODE                                000080A0    00000556 =        1366. bytes (R
      000084C0  __tm1637ClkLow                     sensors
      000084C8  __tm1637DioHigh                    sensors
      000084D0  __tm1637DioLow                     sensors
-     000084D8  _main                              sensors
-     00008584  _segmentMap                        sensors
-     000085A0  __mulint                           _mulint
-
+     000084D8  _clock                             sensors
+     00008501  _main                              sensors
+     000085DD  _segmentMap                        sensors
+     000085F9  __mulint                           _mulint
 ASxxxx Linker V03.00 + NoICE + sdld,  page 9.
 
 Files Linked                              [ module(s) ]
