@@ -67,7 +67,24 @@ void UARTPrintF (char *message) {
 	}
 }
 
-
+void print_UCHAR_hex (unsigned char buffer) {
+   unsigned char message[8];
+   int a, b;
+   a = (buffer >> 4);
+   if (a > 9)
+      a = a + 'a' - 10;
+   else
+      a += '0';
+   b = buffer & 0x0f;
+   if (b > 9)
+      b = b + 'a' - 10;
+   else
+      b += '0';
+   message[0] = a;
+   message[1] = b;
+   message[2] = 0;
+   UARTPrintF (message);
+}
 
 void i2c_send_address (UCHAR addr, UCHAR mode) {
 	volatile int reg;
@@ -402,6 +419,8 @@ int main () {
 		ADC_CR1 |= (1<<0); // ADC Start Conversion
 		while(((ADC_CSR)&(1<<7))== 0); // Wait till EOC
 		val |= (unsigned int)ADC_DRL;
+             UARTPrintF("value = \n\r");
+             print_UCHAR_hex(val);
 		val |= (unsigned int)ADC_DRH<<8;
 		ADC_CR1 &= ~(1<<0); // ADC Stop Conversion
 		val &= 0x03ff;
