@@ -434,12 +434,15 @@ int main () {
 
 	InitializeUART();
 	while (1) {
-
+	        ADC_CSR |= ((0x0F)&2); // select channel = 2 = PC4
+	        ADC_CR2 |= (1<<3); // Right Aligned Data
+		ADC_CR1 |= (1<<0); // ADC ON 
 		ADC_CR1 |= (1<<0); // ADC Start Conversion
 		while(((ADC_CSR)&(1<<7))== 0); // Wait till EOC
+
 		val |= (unsigned int)ADC_DRL;
-                UARTPrintF("value = \n\r");
-                print_UCHAR_hex(val);
+               // UARTPrintF("value = \n\r");
+               // print_UCHAR_hex(val);
 		val |= (unsigned int)ADC_DRH<<8;
 		ADC_CR1 &= ~(1<<0); // ADC Stop Conversion
 		readValue = val & 0x03ff;
@@ -462,7 +465,7 @@ tijd=clock();
 
 
 
-		tm1637DisplayDecimal(val, 1); // eg 37:12
+		tm1637DisplayDecimal(readValue, 1); // eg 37:12
 
 
 		//		delayTenMicro();
