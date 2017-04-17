@@ -1,7 +1,7 @@
                                       1 ;--------------------------------------------------------
                                       2 ; File Created by SDCC : free open source ANSI-C Compiler
-                                      3 ; Version 3.4.0 #8981 (Jul 11 2014) (Linux)
-                                      4 ; This file was generated Mon Apr 10 16:17:21 2017
+                                      3 ; Version 3.4.0 #8981 (Jul  5 2014) (Linux)
+                                      4 ; This file was generated Mon Apr 17 09:45:49 2017
                                       5 ;--------------------------------------------------------
                                       6 	.module sensors
                                       7 	.optsdcc -mstm8
@@ -114,7 +114,7 @@
       00808F AE 00 00         [ 2]  114 	ldw	x, #l_INITIALIZER
       008092 27 09            [ 1]  115 	jreq	00004$
       008094                        116 00003$:
-      008094 D6 86 4E         [ 1]  117 	ld	a, (s_INITIALIZER - 1, x)
+      008094 D6 86 35         [ 1]  117 	ld	a, (s_INITIALIZER - 1, x)
       008097 D7 00 00         [ 1]  118 	ld	(s_INITIALIZED - 1, x), a
       00809A 5A               [ 2]  119 	decw	x
       00809B 26 F7            [ 1]  120 	jrne	00003$
@@ -222,7 +222,7 @@
       0080FB 89               [ 2]  222 	pushw	x
       0080FC 4B 0C            [ 1]  223 	push	#0x0c
       0080FE 4B 04            [ 1]  224 	push	#0x04
-      008100 CD 85 F9         [ 4]  225 	call	__mulint
+      008100 CD 85 E0         [ 4]  225 	call	__mulint
       008103 5B 04            [ 2]  226 	addw	sp, #4
       008105 1F 09            [ 2]  227 	ldw	(0x09, sp), x
       008107                        228 00103$:
@@ -746,20 +746,20 @@
       00837A 97               [ 1]  746 	ld	xl, a
       00837B 7B 18            [ 1]  747 	ld	a, (0x18, sp)
       00837D 95               [ 1]  748 	ld	xh, a
-      00837E 0F 0A            [ 1]  749 	clr	(0x0a, sp)
+      00837E 0F 0D            [ 1]  749 	clr	(0x0d, sp)
       008380 4F               [ 1]  750 	clr	a
       008381 1F 05            [ 2]  751 	ldw	(0x05, sp), x
                                     752 ;	sensors.c: 266: for (ii = 0; ii < 4; ++ii) {
       008383 96               [ 1]  753 	ldw	x, sp
       008384 5C               [ 2]  754 	incw	x
-      008385 1F 0E            [ 2]  755 	ldw	(0x0e, sp), x
-      008387 AE 85 DD         [ 2]  756 	ldw	x, #_segmentMap+0
-      00838A 1F 12            [ 2]  757 	ldw	(0x12, sp), x
+      008385 1F 12            [ 2]  755 	ldw	(0x12, sp), x
+      008387 AE 85 CF         [ 2]  756 	ldw	x, #_segmentMap+0
+      00838A 1F 09            [ 2]  757 	ldw	(0x09, sp), x
       00838C 90 5F            [ 1]  758 	clrw	y
       00838E                        759 00106$:
                                     760 ;	sensors.c: 267: digitArr[ii] = segmentMap[v % 10];
       00838E 93               [ 1]  761 	ldw	x, y
-      00838F 72 FB 0E         [ 2]  762 	addw	x, (0x0e, sp)
+      00838F 72 FB 12         [ 2]  762 	addw	x, (0x12, sp)
       008392 1F 10            [ 2]  763 	ldw	(0x10, sp), x
       008394 90 89            [ 2]  764 	pushw	y
       008396 1E 07            [ 2]  765 	ldw	x, (0x07, sp)
@@ -767,7 +767,7 @@
       00839C 65               [ 2]  767 	divw	x, y
       00839D 93               [ 1]  768 	ldw	x, y
       00839E 90 85            [ 2]  769 	popw	y
-      0083A0 72 FB 12         [ 2]  770 	addw	x, (0x12, sp)
+      0083A0 72 FB 09         [ 2]  770 	addw	x, (0x09, sp)
       0083A3 F6               [ 1]  771 	ld	a, (x)
       0083A4 1E 10            [ 2]  772 	ldw	x, (0x10, sp)
       0083A6 F7               [ 1]  773 	ld	(x), a
@@ -818,12 +818,12 @@
       0083EC                        818 00108$:
                                     819 ;	sensors.c: 284: _tm1637WriteByte(digitArr[3 - ii]);
       0083EC 7B 08            [ 1]  820 	ld	a, (0x08, sp)
-      0083EE 6B 0D            [ 1]  821 	ld	(0x0d, sp), a
+      0083EE 6B 0B            [ 1]  821 	ld	(0x0b, sp), a
       0083F0 A6 03            [ 1]  822 	ld	a, #0x03
-      0083F2 10 0D            [ 1]  823 	sub	a, (0x0d, sp)
+      0083F2 10 0B            [ 1]  823 	sub	a, (0x0b, sp)
       0083F4 5F               [ 1]  824 	clrw	x
       0083F5 97               [ 1]  825 	ld	xl, a
-      0083F6 72 FB 0E         [ 2]  826 	addw	x, (0x0e, sp)
+      0083F6 72 FB 12         [ 2]  826 	addw	x, (0x12, sp)
       0083F9 F6               [ 1]  827 	ld	a, (x)
       0083FA 88               [ 1]  828 	push	a
       0083FB CD 84 7A         [ 4]  829 	call	__tm1637WriteByte
@@ -1052,190 +1052,172 @@
       0084FD 95               [ 1] 1052 	ld	xh, a
       0084FE 5B 03            [ 2] 1053 	addw	sp, #3
       008500 81               [ 4] 1054 	ret
-                                   1055 ;	sensors.c: 402: int main () {
+                                   1055 ;	sensors.c: 400: int main () {
                                    1056 ;	-----------------------------------------
                                    1057 ;	 function main
                                    1058 ;	-----------------------------------------
       008501                       1059 _main:
-      008501 52 0A            [ 2] 1060 	sub	sp, #10
-                                   1061 ;	sensors.c: 404: int maxValue = 0;          // store max value here
+      008501 52 0C            [ 2] 1060 	sub	sp, #12
+                                   1061 ;	sensors.c: 405: unsigned int val=0;
       008503 5F               [ 1] 1062 	clrw	x
-      008504 1F 01            [ 2] 1063 	ldw	(0x01, sp), x
-                                   1064 ;	sensors.c: 407: unsigned int val=0;
-      008506 5F               [ 1] 1065 	clrw	x
-      008507 1F 05            [ 2] 1066 	ldw	(0x05, sp), x
-                                   1067 ;	sensors.c: 410: InitializeSystemClock();
-      008509 CD 80 A8         [ 4] 1068 	call	_InitializeSystemClock
-                                   1069 ;	sensors.c: 412: PD_DDR = (1 << 3) | (1 << 2); // output mode
-      00850C AE 50 11         [ 2] 1070 	ldw	x, #0x5011
-      00850F A6 0C            [ 1] 1071 	ld	a, #0x0c
-      008511 F7               [ 1] 1072 	ld	(x), a
-                                   1073 ;	sensors.c: 413: PD_CR1 = (1 << 3) | (1 << 2); // push-pull
-      008512 AE 50 12         [ 2] 1074 	ldw	x, #0x5012
-      008515 A6 0C            [ 1] 1075 	ld	a, #0x0c
-      008517 F7               [ 1] 1076 	ld	(x), a
-                                   1077 ;	sensors.c: 414: PD_CR2 = (1 << 3) | (1 << 2); // up to 10MHz speed
-      008518 AE 50 13         [ 2] 1078 	ldw	x, #0x5013
-      00851B A6 0C            [ 1] 1079 	ld	a, #0x0c
-      00851D F7               [ 1] 1080 	ld	(x), a
-                                   1081 ;	sensors.c: 419: TIM1_PSCRH = 0x3e;
-      00851E AE 52 60         [ 2] 1082 	ldw	x, #0x5260
-      008521 A6 3E            [ 1] 1083 	ld	a, #0x3e
-      008523 F7               [ 1] 1084 	ld	(x), a
-                                   1085 ;	sensors.c: 420: TIM1_PSCRL = 0x80;
-      008524 AE 52 61         [ 2] 1086 	ldw	x, #0x5261
-      008527 A6 80            [ 1] 1087 	ld	a, #0x80
-      008529 F7               [ 1] 1088 	ld	(x), a
-                                   1089 ;	sensors.c: 430: ADC_CSR |= ((0x0F)&2); // select channel = 2 = PC4
-      00852A AE 54 00         [ 2] 1090 	ldw	x, #0x5400
-      00852D F6               [ 1] 1091 	ld	a, (x)
-      00852E AA 02            [ 1] 1092 	or	a, #0x02
-      008530 F7               [ 1] 1093 	ld	(x), a
-                                   1094 ;	sensors.c: 431: ADC_CR2 |= (1<<3); // Right Aligned Data
-      008531 AE 54 02         [ 2] 1095 	ldw	x, #0x5402
+      008504 1F 09            [ 2] 1063 	ldw	(0x09, sp), x
+                                   1064 ;	sensors.c: 408: InitializeSystemClock();
+      008506 CD 80 A8         [ 4] 1065 	call	_InitializeSystemClock
+                                   1066 ;	sensors.c: 410: PD_DDR = (1 << 3) | (1 << 2); // output mode
+      008509 AE 50 11         [ 2] 1067 	ldw	x, #0x5011
+      00850C A6 0C            [ 1] 1068 	ld	a, #0x0c
+      00850E F7               [ 1] 1069 	ld	(x), a
+                                   1070 ;	sensors.c: 411: PD_CR1 = (1 << 3) | (1 << 2); // push-pull
+      00850F AE 50 12         [ 2] 1071 	ldw	x, #0x5012
+      008512 A6 0C            [ 1] 1072 	ld	a, #0x0c
+      008514 F7               [ 1] 1073 	ld	(x), a
+                                   1074 ;	sensors.c: 412: PD_CR2 = (1 << 3) | (1 << 2); // up to 10MHz speed
+      008515 AE 50 13         [ 2] 1075 	ldw	x, #0x5013
+      008518 A6 0C            [ 1] 1076 	ld	a, #0x0c
+      00851A F7               [ 1] 1077 	ld	(x), a
+                                   1078 ;	sensors.c: 417: TIM1_PSCRH = 0x3e;
+      00851B AE 52 60         [ 2] 1079 	ldw	x, #0x5260
+      00851E A6 3E            [ 1] 1080 	ld	a, #0x3e
+      008520 F7               [ 1] 1081 	ld	(x), a
+                                   1082 ;	sensors.c: 418: TIM1_PSCRL = 0x80;
+      008521 AE 52 61         [ 2] 1083 	ldw	x, #0x5261
+      008524 A6 80            [ 1] 1084 	ld	a, #0x80
+      008526 F7               [ 1] 1085 	ld	(x), a
+                                   1086 ;	sensors.c: 422: tm1637Init();
+      008527 CD 83 6F         [ 4] 1087 	call	_tm1637Init
+                                   1088 ;	sensors.c: 424: InitializeUART();
+      00852A CD 82 F6         [ 4] 1089 	call	_InitializeUART
+                                   1090 ;	sensors.c: 425: while (1) {
+      00852D                       1091 00109$:
+                                   1092 ;	sensors.c: 426: ADC_CR1 |= ADC_ADON; // ADC ON
+      00852D 72 10 54 01      [ 1] 1093 	bset	0x5401, #0
+                                   1094 ;	sensors.c: 427: ADC_CSR |= ((0x0F)&2); // select channel = 2 = PC4
+      008531 AE 54 00         [ 2] 1095 	ldw	x, #0x5400
       008534 F6               [ 1] 1096 	ld	a, (x)
-      008535 AA 08            [ 1] 1097 	or	a, #0x08
+      008535 AA 02            [ 1] 1097 	or	a, #0x02
       008537 F7               [ 1] 1098 	ld	(x), a
-                                   1099 ;	sensors.c: 432: ADC_CR1 |= (1<<0); // ADC ON
-      008538 AE 54 01         [ 2] 1100 	ldw	x, #0x5401
+                                   1099 ;	sensors.c: 429: ADC_CR2 |= ADC_ALIGN; // Right Aligned Data
+      008538 AE 54 02         [ 2] 1100 	ldw	x, #0x5402
       00853B F6               [ 1] 1101 	ld	a, (x)
-      00853C AA 01            [ 1] 1102 	or	a, #0x01
+      00853C AA 08            [ 1] 1102 	or	a, #0x08
       00853E F7               [ 1] 1103 	ld	(x), a
-                                   1104 ;	sensors.c: 433: tm1637Init();
-      00853F CD 83 6F         [ 4] 1105 	call	_tm1637Init
-                                   1106 ;	sensors.c: 435: InitializeUART();
-      008542 CD 82 F6         [ 4] 1107 	call	_InitializeUART
-                                   1108 ;	sensors.c: 436: while (1) {
-      008545                       1109 00111$:
-                                   1110 ;	sensors.c: 438: ADC_CR1 |= (1<<0); // ADC Start Conversion
-      008545 72 10 54 01      [ 1] 1111 	bset	0x5401, #0
-                                   1112 ;	sensors.c: 439: while(((ADC_CSR)&(1<<7))== 0); // Wait till EOC
-      008549                       1113 00101$:
-      008549 AE 54 00         [ 2] 1114 	ldw	x, #0x5400
-      00854C F6               [ 1] 1115 	ld	a, (x)
-      00854D 48               [ 1] 1116 	sll	a
-      00854E 24 F9            [ 1] 1117 	jrnc	00101$
-                                   1118 ;	sensors.c: 440: val |= (unsigned int)ADC_DRL;
-      008550 AE 54 05         [ 2] 1119 	ldw	x, #0x5405
-      008553 F6               [ 1] 1120 	ld	a, (x)
-      008554 5F               [ 1] 1121 	clrw	x
-      008555 97               [ 1] 1122 	ld	xl, a
-      008556 1A 06            [ 1] 1123 	or	a, (0x06, sp)
-      008558 6B 0A            [ 1] 1124 	ld	(0x0a, sp), a
-      00855A 9E               [ 1] 1125 	ld	a, xh
-      00855B 1A 05            [ 1] 1126 	or	a, (0x05, sp)
-      00855D 6B 03            [ 1] 1127 	ld	(0x03, sp), a
-      00855F 7B 0A            [ 1] 1128 	ld	a, (0x0a, sp)
-      008561 6B 04            [ 1] 1129 	ld	(0x04, sp), a
-                                   1130 ;	sensors.c: 441: UARTPrintF("value = \n\r");
-      008563 AE 85 EE         [ 2] 1131 	ldw	x, #___str_0+0
-      008566 89               [ 2] 1132 	pushw	x
-      008567 CD 81 80         [ 4] 1133 	call	_UARTPrintF
-      00856A 5B 02            [ 2] 1134 	addw	sp, #2
-                                   1135 ;	sensors.c: 442: print_UCHAR_hex(val);
-      00856C 7B 04            [ 1] 1136 	ld	a, (0x04, sp)
-      00856E 88               [ 1] 1137 	push	a
-      00856F CD 81 97         [ 4] 1138 	call	_print_UCHAR_hex
-      008572 84               [ 1] 1139 	pop	a
-                                   1140 ;	sensors.c: 443: val |= (unsigned int)ADC_DRH<<8;
-      008573 AE 54 04         [ 2] 1141 	ldw	x, #0x5404
-      008576 F6               [ 1] 1142 	ld	a, (x)
-      008577 5F               [ 1] 1143 	clrw	x
-      008578 97               [ 1] 1144 	ld	xl, a
-      008579 58               [ 2] 1145 	sllw	x
-      00857A 58               [ 2] 1146 	sllw	x
-      00857B 58               [ 2] 1147 	sllw	x
-      00857C 58               [ 2] 1148 	sllw	x
-      00857D 58               [ 2] 1149 	sllw	x
-      00857E 58               [ 2] 1150 	sllw	x
-      00857F 58               [ 2] 1151 	sllw	x
-      008580 58               [ 2] 1152 	sllw	x
-      008581 9F               [ 1] 1153 	ld	a, xl
-      008582 1A 04            [ 1] 1154 	or	a, (0x04, sp)
-      008584 6B 08            [ 1] 1155 	ld	(0x08, sp), a
-      008586 9E               [ 1] 1156 	ld	a, xh
-      008587 1A 03            [ 1] 1157 	or	a, (0x03, sp)
-      008589 6B 05            [ 1] 1158 	ld	(0x05, sp), a
-      00858B 7B 08            [ 1] 1159 	ld	a, (0x08, sp)
-      00858D 6B 06            [ 1] 1160 	ld	(0x06, sp), a
-                                   1161 ;	sensors.c: 444: ADC_CR1 &= ~(1<<0); // ADC Stop Conversion
-      00858F AE 54 01         [ 2] 1162 	ldw	x, #0x5401
-      008592 F6               [ 1] 1163 	ld	a, (x)
-      008593 A4 FE            [ 1] 1164 	and	a, #0xfe
-      008595 F7               [ 1] 1165 	ld	(x), a
-                                   1166 ;	sensors.c: 445: readValue = val & 0x03ff;
-      008596 7B 06            [ 1] 1167 	ld	a, (0x06, sp)
-      008598 90 97            [ 1] 1168 	ld	yl, a
-      00859A 7B 05            [ 1] 1169 	ld	a, (0x05, sp)
-      00859C A4 03            [ 1] 1170 	and	a, #0x03
-      00859E 90 95            [ 1] 1171 	ld	yh, a
-                                   1172 ;	sensors.c: 446: if (readValue > maxValue) 
-      0085A0 51               [ 1] 1173 	exgw	x, y
-      0085A1 13 01            [ 2] 1174 	cpw	x, (0x01, sp)
-      0085A3 51               [ 1] 1175 	exgw	x, y
-      0085A4 2D 02            [ 1] 1176 	jrsle	00105$
-                                   1177 ;	sensors.c: 449: maxValue = readValue;
-      0085A6 17 01            [ 2] 1178 	ldw	(0x01, sp), y
-      0085A8                       1179 00105$:
-                                   1180 ;	sensors.c: 451: if (maxValue > minValue)
-      0085A8 1E 01            [ 2] 1181 	ldw	x, (0x01, sp)
-      0085AA A3 00 02         [ 2] 1182 	cpw	x, #0x0002
-      0085AD 2D 06            [ 1] 1183 	jrsle	00107$
-                                   1184 ;	sensors.c: 453: TIM1_CR1 = 0x01; // enable timer
-      0085AF AE 52 50         [ 2] 1185 	ldw	x, #0x5250
-      0085B2 A6 01            [ 1] 1186 	ld	a, #0x01
-      0085B4 F7               [ 1] 1187 	ld	(x), a
-      0085B5                       1188 00107$:
-                                   1189 ;	sensors.c: 455: if (readValue < minValue)
-      0085B5 90 A3 00 02      [ 2] 1190 	cpw	y, #0x0002
-      0085B9 2E 0D            [ 1] 1191 	jrsge	00109$
-                                   1192 ;	sensors.c: 457: TIM1_CR1 = 0x00; // disable timer
-      0085BB AE 52 50         [ 2] 1193 	ldw	x, #0x5250
-      0085BE 7F               [ 1] 1194 	clr	(x)
-                                   1195 ;	sensors.c: 458: tijd=clock();
-      0085BF CD 84 D8         [ 4] 1196 	call	_clock
-                                   1197 ;	sensors.c: 459: print_UCHAR_hex(tijd);
-      0085C2 9F               [ 1] 1198 	ld	a, xl
-      0085C3 88               [ 1] 1199 	push	a
-      0085C4 CD 81 97         [ 4] 1200 	call	_print_UCHAR_hex
-      0085C7 84               [ 1] 1201 	pop	a
-      0085C8                       1202 00109$:
-                                   1203 ;	sensors.c: 465: tm1637DisplayDecimal(val, 1); // eg 37:12
-      0085C8 16 05            [ 2] 1204 	ldw	y, (0x05, sp)
-      0085CA 5F               [ 1] 1205 	clrw	x
-      0085CB 4B 01            [ 1] 1206 	push	#0x01
-      0085CD 4B 00            [ 1] 1207 	push	#0x00
-      0085CF 90 89            [ 2] 1208 	pushw	y
-      0085D1 89               [ 2] 1209 	pushw	x
-      0085D2 CD 83 76         [ 4] 1210 	call	_tm1637DisplayDecimal
-      0085D5 5B 06            [ 2] 1211 	addw	sp, #6
-      0085D7 CC 85 45         [ 2] 1212 	jp	00111$
-      0085DA 5B 0A            [ 2] 1213 	addw	sp, #10
-      0085DC 81               [ 4] 1214 	ret
-                                   1215 	.area CODE
-      0085DD                       1216 _segmentMap:
-      0085DD 3F                    1217 	.db #0x3F	;  63
-      0085DE 06                    1218 	.db #0x06	;  6
-      0085DF 5B                    1219 	.db #0x5B	;  91
-      0085E0 4F                    1220 	.db #0x4F	;  79	'O'
-      0085E1 66                    1221 	.db #0x66	;  102	'f'
-      0085E2 6D                    1222 	.db #0x6D	;  109	'm'
-      0085E3 7D                    1223 	.db #0x7D	;  125
-      0085E4 07                    1224 	.db #0x07	;  7
-      0085E5 7F                    1225 	.db #0x7F	;  127
-      0085E6 6F                    1226 	.db #0x6F	;  111	'o'
-      0085E7 77                    1227 	.db #0x77	;  119	'w'
-      0085E8 7C                    1228 	.db #0x7C	;  124
-      0085E9 39                    1229 	.db #0x39	;  57	'9'
-      0085EA 5E                    1230 	.db #0x5E	;  94
-      0085EB 79                    1231 	.db #0x79	;  121	'y'
-      0085EC 71                    1232 	.db #0x71	;  113	'q'
-      0085ED 00                    1233 	.db #0x00	;  0
-      0085EE                       1234 ___str_0:
-      0085EE 76 61 6C 75 65 20 3D  1235 	.ascii "value = "
-             20
-      0085F6 0A                    1236 	.db 0x0A
-      0085F7 0D                    1237 	.db 0x0D
-      0085F8 00                    1238 	.db 0x00
-                                   1239 	.area INITIALIZER
-                                   1240 	.area CABS (ABS)
+                                   1104 ;	sensors.c: 433: ADC_CR1 |= ADC_ADON; // ADC ON
+      00853F 72 10 54 01      [ 1] 1105 	bset	0x5401, #0
+                                   1106 ;	sensors.c: 434: while(((ADC_CSR)&(1<<7))== 0); // Wait till EOC
+      008543                       1107 00101$:
+      008543 AE 54 00         [ 2] 1108 	ldw	x, #0x5400
+      008546 F6               [ 1] 1109 	ld	a, (x)
+      008547 48               [ 1] 1110 	sll	a
+      008548 24 F9            [ 1] 1111 	jrnc	00101$
+                                   1112 ;	sensors.c: 436: val |= (unsigned int)ADC_DRL;
+      00854A AE 54 05         [ 2] 1113 	ldw	x, #0x5405
+      00854D F6               [ 1] 1114 	ld	a, (x)
+      00854E 5F               [ 1] 1115 	clrw	x
+      00854F 97               [ 1] 1116 	ld	xl, a
+      008550 1A 0A            [ 1] 1117 	or	a, (0x0a, sp)
+      008552 6B 0C            [ 1] 1118 	ld	(0x0c, sp), a
+      008554 9E               [ 1] 1119 	ld	a, xh
+      008555 1A 09            [ 1] 1120 	or	a, (0x09, sp)
+      008557 6B 03            [ 1] 1121 	ld	(0x03, sp), a
+      008559 7B 0C            [ 1] 1122 	ld	a, (0x0c, sp)
+      00855B 6B 04            [ 1] 1123 	ld	(0x04, sp), a
+                                   1124 ;	sensors.c: 439: val |= (unsigned int)ADC_DRH<<8;
+      00855D AE 54 04         [ 2] 1125 	ldw	x, #0x5404
+      008560 F6               [ 1] 1126 	ld	a, (x)
+      008561 5F               [ 1] 1127 	clrw	x
+      008562 97               [ 1] 1128 	ld	xl, a
+      008563 58               [ 2] 1129 	sllw	x
+      008564 58               [ 2] 1130 	sllw	x
+      008565 58               [ 2] 1131 	sllw	x
+      008566 58               [ 2] 1132 	sllw	x
+      008567 58               [ 2] 1133 	sllw	x
+      008568 58               [ 2] 1134 	sllw	x
+      008569 58               [ 2] 1135 	sllw	x
+      00856A 58               [ 2] 1136 	sllw	x
+      00856B 9F               [ 1] 1137 	ld	a, xl
+      00856C 1A 04            [ 1] 1138 	or	a, (0x04, sp)
+      00856E 90 97            [ 1] 1139 	ld	yl, a
+      008570 9E               [ 1] 1140 	ld	a, xh
+      008571 1A 03            [ 1] 1141 	or	a, (0x03, sp)
+      008573 6B 07            [ 1] 1142 	ld	(0x07, sp), a
+      008575 7B 07            [ 1] 1143 	ld	a, (0x07, sp)
+      008577 6B 05            [ 1] 1144 	ld	(0x05, sp), a
+                                   1145 ;	sensors.c: 440: ADC_CR1 &= ~(1<<0); // ADC Stop Conversion
+      008579 AE 54 01         [ 2] 1146 	ldw	x, #0x5401
+      00857C F6               [ 1] 1147 	ld	a, (x)
+      00857D A4 FE            [ 1] 1148 	and	a, #0xfe
+      00857F F7               [ 1] 1149 	ld	(x), a
+                                   1150 ;	sensors.c: 441: readValue = val & 0x03ff;
+      008580 7B 05            [ 1] 1151 	ld	a, (0x05, sp)
+      008582 A4 03            [ 1] 1152 	and	a, #0x03
+      008584 90 95            [ 1] 1153 	ld	yh, a
+      008586 17 01            [ 2] 1154 	ldw	(0x01, sp), y
+                                   1155 ;	sensors.c: 442: if (readValue > minValue)
+      008588 1E 01            [ 2] 1156 	ldw	x, (0x01, sp)
+      00858A A3 00 0A         [ 2] 1157 	cpw	x, #0x000a
+      00858D 2D 06            [ 1] 1158 	jrsle	00105$
+                                   1159 ;	sensors.c: 444: TIM1_CR1 = 0x01; // enable timer
+      00858F AE 52 50         [ 2] 1160 	ldw	x, #0x5250
+      008592 A6 01            [ 1] 1161 	ld	a, #0x01
+      008594 F7               [ 1] 1162 	ld	(x), a
+      008595                       1163 00105$:
+                                   1164 ;	sensors.c: 446: if (readValue < minValue)
+      008595 1E 01            [ 2] 1165 	ldw	x, (0x01, sp)
+      008597 A3 00 0A         [ 2] 1166 	cpw	x, #0x000a
+      00859A 2E 0D            [ 1] 1167 	jrsge	00107$
+                                   1168 ;	sensors.c: 448: TIM1_CR1 = 0x00; // disable timer
+      00859C AE 52 50         [ 2] 1169 	ldw	x, #0x5250
+      00859F 7F               [ 1] 1170 	clr	(x)
+                                   1171 ;	sensors.c: 449: tijd=clock();
+      0085A0 CD 84 D8         [ 4] 1172 	call	_clock
+                                   1173 ;	sensors.c: 450: print_UCHAR_hex(tijd);
+      0085A3 9F               [ 1] 1174 	ld	a, xl
+      0085A4 88               [ 1] 1175 	push	a
+      0085A5 CD 81 97         [ 4] 1176 	call	_print_UCHAR_hex
+      0085A8 84               [ 1] 1177 	pop	a
+      0085A9                       1178 00107$:
+                                   1179 ;	sensors.c: 456: tm1637DisplayDecimal(readValue, 0); // eg 3712
+      0085A9 16 01            [ 2] 1180 	ldw	y, (0x01, sp)
+      0085AB 5F               [ 1] 1181 	clrw	x
+      0085AC 90 5D            [ 2] 1182 	tnzw	y
+      0085AE 2A 01            [ 1] 1183 	jrpl	00136$
+      0085B0 5A               [ 2] 1184 	decw	x
+      0085B1                       1185 00136$:
+      0085B1 4B 00            [ 1] 1186 	push	#0x00
+      0085B3 4B 00            [ 1] 1187 	push	#0x00
+      0085B5 90 89            [ 2] 1188 	pushw	y
+      0085B7 89               [ 2] 1189 	pushw	x
+      0085B8 CD 83 76         [ 4] 1190 	call	_tm1637DisplayDecimal
+      0085BB 5B 06            [ 2] 1191 	addw	sp, #6
+                                   1192 ;	sensors.c: 457: val=0;
+      0085BD 5F               [ 1] 1193 	clrw	x
+      0085BE 1F 09            [ 2] 1194 	ldw	(0x09, sp), x
+                                   1195 ;	sensors.c: 458: delay(1);
+      0085C0 4B 01            [ 1] 1196 	push	#0x01
+      0085C2 4B 00            [ 1] 1197 	push	#0x00
+      0085C4 CD 80 F2         [ 4] 1198 	call	_delay
+      0085C7 5B 02            [ 2] 1199 	addw	sp, #2
+      0085C9 CC 85 2D         [ 2] 1200 	jp	00109$
+      0085CC 5B 0C            [ 2] 1201 	addw	sp, #12
+      0085CE 81               [ 4] 1202 	ret
+                                   1203 	.area CODE
+      0085CF                       1204 _segmentMap:
+      0085CF 3F                    1205 	.db #0x3F	;  63
+      0085D0 06                    1206 	.db #0x06	;  6
+      0085D1 5B                    1207 	.db #0x5B	;  91
+      0085D2 4F                    1208 	.db #0x4F	;  79	'O'
+      0085D3 66                    1209 	.db #0x66	;  102	'f'
+      0085D4 6D                    1210 	.db #0x6D	;  109	'm'
+      0085D5 7D                    1211 	.db #0x7D	;  125
+      0085D6 07                    1212 	.db #0x07	;  7
+      0085D7 7F                    1213 	.db #0x7F	;  127
+      0085D8 6F                    1214 	.db #0x6F	;  111	'o'
+      0085D9 77                    1215 	.db #0x77	;  119	'w'
+      0085DA 7C                    1216 	.db #0x7C	;  124
+      0085DB 39                    1217 	.db #0x39	;  57	'9'
+      0085DC 5E                    1218 	.db #0x5E	;  94
+      0085DD 79                    1219 	.db #0x79	;  121	'y'
+      0085DE 71                    1220 	.db #0x71	;  113	'q'
+      0085DF 00                    1221 	.db #0x00	;  0
+                                   1222 	.area INITIALIZER
+                                   1223 	.area CABS (ABS)
