@@ -400,9 +400,18 @@ unsigned int internteller;
 unsigned int seconden;
 
 /*
-voor port D external interrupts is 6
+voor port D external interrupts is 6 (ipv 23)
+
 GPIO_Init(GPIOD, GPIO_PIN_4, GPIO_MODE_IN_FL_IT);       // PD4 external interrupt pin - float input
 EXTI_SetExtIntSensitivity(EXTI_PORT_GPIOD, EXTI_SENSITIVITY_FALL_ONLY);
+
+
+//PD4 is interrupt
+PD_DDR = (0 << 4); // input mode
+PD_CR1 &= ~(1 << 4); // input with float 
+PD_CR2 = (1 << 4); // interrupt enabled
+//PD_ODR &= ~(1 << 3);
+
 
 
 
