@@ -35,10 +35,13 @@ Symbol Table
   8 _i2c_set_nak                                                   0000AE GR
   8 _i2c_set_start_ack                                             000187 GR
   8 _i2c_set_stop                                                  0000B6 GR
-  8 _main                                                          000461 GR
+  1 _internteller                                                  000000 GR
+  8 _main                                                          000484 GR
   8 _print_UCHAR_hex                                               0000F7 GR
   8 _print_byte_hex                                                000195 GR
-  8 _segmentMap                                                    00052F GR
+  1 _seconden                                                      000002 GR
+  8 _segmentMap                                                    00055C GR
+  8 _timer_isr                                                     000461 GR
   8 _tm1637DisplayDecimal                                          0002D6 GR
   8 _tm1637Init                                                    0002CF GR
   8 _tm1637SetBrightness                                           000374 GR
@@ -55,14 +58,14 @@ Hexadecimal [24-Bits]
 Area Table
 
    0 _CODE                                      size      0   flags    0
-   1 DATA                                       size      0   flags    0
+   1 DATA                                       size      4   flags    0
    2 INITIALIZED                                size      0   flags    0
    3 SSEG                                       size      1   flags    0
    4 DABS                                       size      0   flags    8
    5 HOME                                       size     83   flags    0
    6 GSINIT                                     size     1A   flags    0
    7 GSFINAL                                    size      3   flags    0
-   8 CODE                                       size    540   flags    0
+   8 CODE                                       size    56D   flags    0
    9 INITIALIZER                                size      0   flags    0
    A CABS                                       size      0   flags    8
 

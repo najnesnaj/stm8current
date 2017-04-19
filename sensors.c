@@ -396,6 +396,47 @@ unsigned int clock(void)
 }
 
 
+unsigned int internteller;
+unsigned int seconden;
+
+/*
+voor port D external interrupts is 6
+GPIO_Init(GPIOD, GPIO_PIN_4, GPIO_MODE_IN_FL_IT);       // PD4 external interrupt pin - float input
+EXTI_SetExtIntSensitivity(EXTI_PORT_GPIOD, EXTI_SENSITIVITY_FALL_ONLY);
+
+
+
+idee voor clock
+void rt_one_second_increment (st_time *t) {
+        if(++t->second > 59) {
+                t->second= 0;
+                if(++t->minute > 59) {
+                        t->minute= 0;
+                        if(++t->hour > 23) {
+                                t->hour= 0;
+                        }
+                }
+        }
+}
+
+
+
+*/
+
+
+#define TIM4_ISR 23 //interrupt vector mapping
+
+void timer_isr(void) __interrupt(TIM4_ISR) {
+    if (++internteller > 260) {
+internteller=0;
+++seconden;
+}
+    TIM4_SR &= ~(TIMx_UIF); //update interrupt
+}
+
+
+
+
 
 int main () {
 	int readValue;             //value read from the sensor
@@ -404,7 +445,6 @@ int main () {
 	int tijd;
 	unsigned int val=0;
 	unsigned int displaymode=1;
-
 	InitializeSystemClock();
 	//display on PD2 PD3
 	PD_DDR = (1 << 3) | (1 << 2); // output mode
@@ -419,7 +459,27 @@ int main () {
 	tm1637Init();
 
 	InitializeUART();
+
+ /* Enable interrupts */
+    __asm__("rim");
+
+    /* Prescaler = 128 */
+    TIM4_PSCR = 0b00000111;
+    /* Period = 5ms */
+    TIM4_ARR = 239;
+    //TIM4_IER |= (1 << TIM4_IER_UIE); // Enable Update Interrupt
+    TIM4_IER |= TIMx_UIE;// Enable Update Interrupt
+   // TIM4_CR1 |= (1 << TIM4_CR1_CEN); // Enable TIM4
+    TIM4_CR1 |= TIMx_CEN; // Enable TIM4
+
+// 16Mhz / (2*128*(1+239)) = 260 
+
+
 	while (1) {
+
+
+
+
 		ADC_CR1 |= ADC_ADON; // ADC ON
 		ADC_CSR |= ((0x0F)&2); // select channel = 2 = PC4
 		ADC_CR2 |= ADC_ALIGN; // Right Aligned Data
@@ -442,7 +502,8 @@ int main () {
 			print_UCHAR_hex(tijd);
 		}
 
-		tm1637DisplayDecimal(readValue, 0); // eg 3712
+	//	tm1637DisplayDecimal(readValue, 0); // eg 3712
+		tm1637DisplayDecimal(seconden, 0); // tijd in seconden 
 		val=0;
 		delay(1);
 		//				delayTenMicro();

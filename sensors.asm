@@ -1,7 +1,7 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
-; Version 3.4.0 #8981 (Jul  5 2014) (Linux)
-; This file was generated Mon Apr 17 09:45:49 2017
+; Version 3.4.0 #8981 (Jul 11 2014) (Linux)
+; This file was generated Wed Apr 19 15:37:51 2017
 ;--------------------------------------------------------
 	.module sensors
 	.optsdcc -mstm8
@@ -11,6 +11,7 @@
 ;--------------------------------------------------------
 	.globl _segmentMap
 	.globl _main
+	.globl _timer_isr
 	.globl _clock
 	.globl _tm1637DisplayDecimal
 	.globl _tm1637Init
@@ -29,6 +30,8 @@
 	.globl _delay
 	.globl _InitializeSystemClock
 	.globl _delayTenMicro
+	.globl _seconden
+	.globl _internteller
 	.globl _tm1637SetBrightness
 	.globl __tm1637Start
 	.globl __tm1637Stop
@@ -42,6 +45,10 @@
 ; ram data
 ;--------------------------------------------------------
 	.area DATA
+_internteller::
+	.ds 2
+_seconden::
+	.ds 2
 ;--------------------------------------------------------
 ; ram data
 ;--------------------------------------------------------
@@ -87,7 +94,7 @@ __interrupt_vect:
 	int 0x0000 ;int20
 	int 0x0000 ;int21
 	int 0x0000 ;int22
-	int 0x0000 ;int23
+	int _timer_isr ;int23
 	int 0x0000 ;int24
 	int 0x0000 ;int25
 	int 0x0000 ;int26
@@ -1052,76 +1059,115 @@ _clock:
 	ld	xh, a
 	addw	sp, #3
 	ret
-;	sensors.c: 400: int main () {
+;	sensors.c: 429: void timer_isr(void) __interrupt(TIM4_ISR) {
+;	-----------------------------------------
+;	 function timer_isr
+;	-----------------------------------------
+_timer_isr:
+;	sensors.c: 430: if (++internteller > 260) {
+	ldw	x, _internteller+0
+	incw	x
+	ldw	_internteller+0, x
+	cpw	x, #0x0104
+	jrule	00102$
+;	sensors.c: 431: internteller=0;
+	clr	_internteller+1
+	clr	_internteller+0
+;	sensors.c: 432: ++seconden;
+	ldw	x, _seconden+0
+	incw	x
+	ldw	_seconden+0, x
+00102$:
+;	sensors.c: 434: TIM4_SR &= ~(TIMx_UIF); //update interrupt
+	ldw	x, #0x5344
+	ld	a, (x)
+	and	a, #0xfe
+	ld	(x), a
+	iret
+;	sensors.c: 441: int main () {
 ;	-----------------------------------------
 ;	 function main
 ;	-----------------------------------------
 _main:
-	sub	sp, #12
-;	sensors.c: 405: unsigned int val=0;
+	sub	sp, #6
+;	sensors.c: 446: unsigned int val=0;
 	clrw	x
-	ldw	(0x09, sp), x
-;	sensors.c: 408: InitializeSystemClock();
+	ldw	(0x05, sp), x
+;	sensors.c: 448: InitializeSystemClock();
 	call	_InitializeSystemClock
-;	sensors.c: 410: PD_DDR = (1 << 3) | (1 << 2); // output mode
+;	sensors.c: 450: PD_DDR = (1 << 3) | (1 << 2); // output mode
 	ldw	x, #0x5011
 	ld	a, #0x0c
 	ld	(x), a
-;	sensors.c: 411: PD_CR1 = (1 << 3) | (1 << 2); // push-pull
+;	sensors.c: 451: PD_CR1 = (1 << 3) | (1 << 2); // push-pull
 	ldw	x, #0x5012
 	ld	a, #0x0c
 	ld	(x), a
-;	sensors.c: 412: PD_CR2 = (1 << 3) | (1 << 2); // up to 10MHz speed
+;	sensors.c: 452: PD_CR2 = (1 << 3) | (1 << 2); // up to 10MHz speed
 	ldw	x, #0x5013
 	ld	a, #0x0c
 	ld	(x), a
-;	sensors.c: 417: TIM1_PSCRH = 0x3e;
+;	sensors.c: 456: TIM1_PSCRH = 0x3e;
 	ldw	x, #0x5260
 	ld	a, #0x3e
 	ld	(x), a
-;	sensors.c: 418: TIM1_PSCRL = 0x80;
+;	sensors.c: 457: TIM1_PSCRL = 0x80;
 	ldw	x, #0x5261
 	ld	a, #0x80
 	ld	(x), a
-;	sensors.c: 422: tm1637Init();
+;	sensors.c: 459: tm1637Init();
 	call	_tm1637Init
-;	sensors.c: 424: InitializeUART();
+;	sensors.c: 461: InitializeUART();
 	call	_InitializeUART
-;	sensors.c: 425: while (1) {
+;	sensors.c: 464: __asm__("rim");
+	rim
+;	sensors.c: 467: TIM4_PSCR = 0b00000111;
+	ldw	x, #0x5347
+	ld	a, #0x07
+	ld	(x), a
+;	sensors.c: 469: TIM4_ARR = 239;
+	ldw	x, #0x5348
+	ld	a, #0xef
+	ld	(x), a
+;	sensors.c: 471: TIM4_IER |= TIMx_UIE;// Enable Update Interrupt
+	bset	0x5343, #0
+;	sensors.c: 473: TIM4_CR1 |= TIMx_CEN; // Enable TIM4
+	bset	0x5340, #0
+;	sensors.c: 478: while (1) {
 00109$:
-;	sensors.c: 426: ADC_CR1 |= ADC_ADON; // ADC ON
+;	sensors.c: 483: ADC_CR1 |= ADC_ADON; // ADC ON
 	bset	0x5401, #0
-;	sensors.c: 427: ADC_CSR |= ((0x0F)&2); // select channel = 2 = PC4
+;	sensors.c: 484: ADC_CSR |= ((0x0F)&2); // select channel = 2 = PC4
 	ldw	x, #0x5400
 	ld	a, (x)
 	or	a, #0x02
 	ld	(x), a
-;	sensors.c: 429: ADC_CR2 |= ADC_ALIGN; // Right Aligned Data
+;	sensors.c: 485: ADC_CR2 |= ADC_ALIGN; // Right Aligned Data
 	ldw	x, #0x5402
 	ld	a, (x)
 	or	a, #0x08
 	ld	(x), a
-;	sensors.c: 433: ADC_CR1 |= ADC_ADON; // ADC ON
+;	sensors.c: 486: ADC_CR1 |= ADC_ADON; // start conversion 
 	bset	0x5401, #0
-;	sensors.c: 434: while(((ADC_CSR)&(1<<7))== 0); // Wait till EOC
+;	sensors.c: 487: while(((ADC_CSR)&(1<<7))== 0); // Wait till EOC
 00101$:
 	ldw	x, #0x5400
 	ld	a, (x)
 	sll	a
 	jrnc	00101$
-;	sensors.c: 436: val |= (unsigned int)ADC_DRL;
+;	sensors.c: 489: val |= (unsigned int)ADC_DRL;
 	ldw	x, #0x5405
 	ld	a, (x)
 	clrw	x
 	ld	xl, a
-	or	a, (0x0a, sp)
-	ld	(0x0c, sp), a
-	ld	a, xh
-	or	a, (0x09, sp)
-	ld	(0x03, sp), a
-	ld	a, (0x0c, sp)
+	or	a, (0x06, sp)
 	ld	(0x04, sp), a
-;	sensors.c: 439: val |= (unsigned int)ADC_DRH<<8;
+	ld	a, xh
+	or	a, (0x05, sp)
+	ld	(0x01, sp), a
+	ld	a, (0x04, sp)
+	ld	(0x02, sp), a
+;	sensors.c: 491: val |= (unsigned int)ADC_DRH<<8;
 	ldw	x, #0x5404
 	ld	a, (x)
 	clrw	x
@@ -1135,70 +1181,61 @@ _main:
 	sllw	x
 	sllw	x
 	ld	a, xl
-	or	a, (0x04, sp)
+	or	a, (0x02, sp)
 	ld	yl, a
 	ld	a, xh
-	or	a, (0x03, sp)
-	ld	(0x07, sp), a
-	ld	a, (0x07, sp)
-	ld	(0x05, sp), a
-;	sensors.c: 440: ADC_CR1 &= ~(1<<0); // ADC Stop Conversion
+	or	a, (0x01, sp)
+	ld	yh, a
+;	sensors.c: 492: ADC_CR1 &= ~(1<<0); // ADC Stop Conversion
 	ldw	x, #0x5401
 	ld	a, (x)
 	and	a, #0xfe
 	ld	(x), a
-;	sensors.c: 441: readValue = val & 0x03ff;
-	ld	a, (0x05, sp)
+;	sensors.c: 493: readValue = val & 0x03ff;
+	ld	a, yh
 	and	a, #0x03
 	ld	yh, a
-	ldw	(0x01, sp), y
-;	sensors.c: 442: if (readValue > minValue)
-	ldw	x, (0x01, sp)
-	cpw	x, #0x000a
+;	sensors.c: 494: if (readValue > minValue)
+	cpw	y, #0x000a
 	jrsle	00105$
-;	sensors.c: 444: TIM1_CR1 = 0x01; // enable timer
+;	sensors.c: 496: TIM1_CR1 = 0x01; // enable timer
 	ldw	x, #0x5250
 	ld	a, #0x01
 	ld	(x), a
 00105$:
-;	sensors.c: 446: if (readValue < minValue)
-	ldw	x, (0x01, sp)
-	cpw	x, #0x000a
+;	sensors.c: 498: if (readValue < minValue)
+	cpw	y, #0x000a
 	jrsge	00107$
-;	sensors.c: 448: TIM1_CR1 = 0x00; // disable timer
+;	sensors.c: 500: TIM1_CR1 = 0x00; // disable timer
 	ldw	x, #0x5250
 	clr	(x)
-;	sensors.c: 449: tijd=clock();
+;	sensors.c: 501: tijd=clock();
 	call	_clock
-;	sensors.c: 450: print_UCHAR_hex(tijd);
+;	sensors.c: 502: print_UCHAR_hex(tijd);
 	ld	a, xl
 	push	a
 	call	_print_UCHAR_hex
 	pop	a
 00107$:
-;	sensors.c: 456: tm1637DisplayDecimal(readValue, 0); // eg 3712
-	ldw	y, (0x01, sp)
+;	sensors.c: 506: tm1637DisplayDecimal(seconden, 0); // tijd in seconden 
+	ldw	y, _seconden+0
 	clrw	x
-	tnzw	y
-	jrpl	00136$
-	decw	x
-00136$:
 	push	#0x00
 	push	#0x00
 	pushw	y
 	pushw	x
 	call	_tm1637DisplayDecimal
 	addw	sp, #6
-;	sensors.c: 457: val=0;
+;	sensors.c: 507: val=0;
 	clrw	x
-	ldw	(0x09, sp), x
-;	sensors.c: 458: delay(1);
+	ldw	(0x05, sp), x
+;	sensors.c: 508: delay(1);
 	push	#0x01
 	push	#0x00
 	call	_delay
 	addw	sp, #2
 	jp	00109$
-	addw	sp, #12
+	addw	sp, #6
 	ret
 	.area CODE
 _segmentMap:
