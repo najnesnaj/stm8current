@@ -398,6 +398,7 @@ unsigned int clock(void)
 
 unsigned int internteller;
 unsigned int seconden;
+unsigned int minuten;
 
 /*
 voor port D external interrupts is 6 (ipv 23)
@@ -436,9 +437,16 @@ void rt_one_second_increment (st_time *t) {
 #define TIM4_ISR 23 //interrupt vector mapping
 
 void timer_isr(void) __interrupt(TIM4_ISR) {
-    if (++internteller > 260) {
+    if (++internteller > 520) {
 internteller=0;
 ++seconden;
+}
+
+
+if (seconden > 59){
+seconden=0;
+++minuten;
+
 }
     TIM4_SR &= ~(TIMx_UIF); //update interrupt
 }
@@ -512,7 +520,7 @@ int main () {
 		}
 
 	//	tm1637DisplayDecimal(readValue, 0); // eg 3712
-		tm1637DisplayDecimal(seconden, 0); // tijd in seconden 
+		tm1637DisplayDecimal(minuten, 0); // tijd in seconden 
 		val=0;
 		delay(1);
 		//				delayTenMicro();
